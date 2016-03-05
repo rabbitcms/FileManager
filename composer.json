@@ -1,6 +1,7 @@
 {
 	"name": "rabbitcms/file-manager",
 	"description": "",
+	"type": "october-module",
 	"authors": [
 		{
 			"name": "Pingpong Labs",
