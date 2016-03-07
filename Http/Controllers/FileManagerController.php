@@ -1,4 +1,4 @@
-<?php namespace Modules\Filemanager\Http\Controllers;
+<?php namespace RabbitCMS\Filemanager\Http\Controllers;
 
 use Pingpong\Modules\Routing\Controller;
 

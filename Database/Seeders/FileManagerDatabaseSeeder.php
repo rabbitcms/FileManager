@@ -1,4 +1,4 @@
-<?php namespace Modules\Filemanager\Database\Seeders;
+<?php namespace RabbitCMS\Filemanager\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;

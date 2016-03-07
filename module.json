@@ -6,7 +6,7 @@
     "active": 1,
     "order": 0,
     "providers": [
-        "Modules\\FileManager\\Providers\\FileManagerServiceProvider"
+        "RabbitCMS\\FileManager\\Providers\\FileManagerServiceProvider"
     ],
     "aliases":{},
 }
