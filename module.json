@@ -8,5 +8,5 @@
     "providers": [
         "RabbitCMS\\FileManager\\Providers\\FileManagerServiceProvider"
     ],
-    "aliases":{},
+    "aliases":{}
 }

@@ -1,6 +1,5 @@
-<?php namespace RabbitCMS\Filemanager\Providers;
+<?php namespace RabbitCMS\FileManager\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use RabbitCMS\Backend\Providers\ModuleProvider;
 
 class FileManagerServiceProvider extends ModuleProvider
@@ -29,10 +28,8 @@ class FileManagerServiceProvider extends ModuleProvider
     public function register()
     {
         parent::register();
-        dd();
 
-        \BackendMenu::addMenu('system', '', trans('System'), 'fa-file-text', ['system.*']);
-        \BackendMenu::addItem('system', 'filemanager', trans('File manager'), '/blanks/blanks', 'fa-bars', ['system.filemanager.*']);
+        \BackendMenu::addItem('system', 'filemanager', trans('File manager'), '/blanks/blanks', 'fa-bars', ['system.filemanager']);
 
         \BackendAcl::add([
             'system.filemanager' => trans('File manager'),

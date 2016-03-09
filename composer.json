@@ -12,5 +12,11 @@
 		"psr-4": {
 			"RabbitCMS\\FileManager\\": ""
 		}
+	},
+	"require": {
+		"illuminate/support":"5.2",
+		"illuminate/database":"5.2",
+		"rabittcms/carrot":"~0.1",
+		"dkulyk/eloquent-extra": "0.1.7.1"
 	}
 }

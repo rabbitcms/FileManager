@@ -1,8 +1,9 @@
-<?php namespace RabbitCMS\Filemanager\Http\Controllers;
+<?php namespace RabbitCMS\FileManager\Http\Controllers;
 
-use Pingpong\Modules\Routing\Controller;
 
-class FileManagerController extends Controller {
+use RabbitCMS\Carrot\Http\ModuleController;
+
+class FileManagerController extends ModuleController {
 	
 	public function index()
 	{
