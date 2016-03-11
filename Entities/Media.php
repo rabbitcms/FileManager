@@ -1,5 +1,7 @@
 <?php namespace RabbitCMS\FileManager\Entities;
 
+use DKulyk\Eloquent\Logging;
+use DKulyk\Eloquent\PrintableJson;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -19,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Media extends Model
 {
+    use Logging, PrintableJson;
+    
     const TYPE_FILE = 'file';
     const TYPE_DIR = 'dir';
 

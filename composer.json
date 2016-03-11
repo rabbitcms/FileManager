@@ -14,9 +14,11 @@
 		}
 	},
 	"require": {
-		"illuminate/support":"5.2",
-		"illuminate/database":"5.2",
+		"illuminate/support":"^5.2",
+		"illuminate/database":"^5.2",
 		"rabittcms/carrot":"~0.1",
-		"dkulyk/eloquent-extra": "0.1.7.1"
+		"dkulyk/eloquent-extra": "0.1.7.1",
+		"studio-42/elfinder": "2.1.x",
+		"bower-asset/elfinder":"2.1.x"
 	}
 }
