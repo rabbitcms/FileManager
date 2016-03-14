@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
     |--------------------------------------------------------------------------
@@ -10,7 +10,7 @@ return array(
     | The dir where to store the images (relative from public)
     |
     */
-	'dir' => ['files'],
+	'dir'   => ['files'],
 
 	/*
     |--------------------------------------------------------------------------
@@ -26,9 +26,9 @@ return array(
     |    ]
     */
 	'disks' => [
-		'media'=>[
-			'alias'=>__('MediaFiles')
-		]
+		'media' => [
+			'alias' => trans('MediaFiles'),
+		],
 	],
 
 	/*
@@ -53,6 +53,6 @@ return array(
     |
     */
 
-	'options' => array(),
+	'options' => [],
 
-);
+];
