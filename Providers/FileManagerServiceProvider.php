@@ -1,6 +1,9 @@
 <?php namespace RabbitCMS\FileManager\Providers;
 
-use RabbitCMS\Backend\Providers\ModuleProvider;
+use Illuminate\Foundation\Application;
+
+use RabbitCMS\Carrot\Providers\ModuleProvider;
+use RabbitCMS\FileManager\FileSystem\Media;
 
 class FileManagerServiceProvider extends ModuleProvider
 {
@@ -28,6 +31,14 @@ class FileManagerServiceProvider extends ModuleProvider
     public function register()
     {
         parent::register();
+
+        $this->app->make('config')->set('filesystems.disks.media', [
+            'driver' => 'media',
+        ]);
+
+        \Storage::extend('media', function (Application $app, $config) {
+            return new Media();
+        });
 
         \BackendMenu::addItem('system', 'filemanager', trans('File manager'), '/blanks/blanks', 'fa-bars', ['system.filemanager']);
 

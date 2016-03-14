@@ -4,8 +4,8 @@
 	"type": "october-module",
 	"authors": [
 		{
-			"name": "Pingpong Labs",
-			"email": "pingpong.labs@gmail.com"
+			"name": "Kulyk Dmytro",
+			"email": "lnkvisitor.ts@gmail.com"
 		}
 	],
 	"autoload": {
@@ -19,6 +19,8 @@
 		"rabbitcms/carrot": "^0.1",
 		"dkulyk/eloquent-extra": "^0.1",
 		"studio-42/elfinder": "^2.1",
-		"bower-asset/elfinder":"^2.1"
+		"bower-asset/elfinder":"^2.1",
+		"baum/baum": "~1.1",
+		"barryvdh/elfinder-flysystem-driver": "^0.1"
 	}
 }

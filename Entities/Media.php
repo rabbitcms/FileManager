@@ -1,8 +1,9 @@
 <?php namespace RabbitCMS\FileManager\Entities;
 
+use Baum\Node;
+use Carbon\Carbon;
 use DKulyk\Eloquent\Logging;
 use DKulyk\Eloquent\PrintableJson;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Media
@@ -12,17 +13,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property string      $hash
  * @property string      $type
  * @property string      $caption
- * @property string      $ext
- * @property int         $size
+ *
+ * @property-read Carbon $created_at
+ * @property-read Carbon $updated_at
+ * @property-read Carbon $deleted_at
  *
  * @property-read string $path
+ * @property-read string $realPath
  * @property-read string $fullPath
- *
+ * @property-read int    $size
+ * @proeprty-read string $mime
  */
-class Media extends Model
+class Media extends Node
 {
     use Logging, PrintableJson;
-    
+
     const TYPE_FILE = 'file';
     const TYPE_DIR = 'dir';
 
@@ -39,15 +44,28 @@ class Media extends Model
             'hash',
             'type',
             'caption',
-            'ext',
-            'parent_id',
-            'size',
         ];
 
     protected $casts
         = [
             'parent_id' => 'int',
             'size'      => 'int',
+        ];
+
+    protected $hidden
+        = [
+            'lft',
+            'rght',
+            'depth',
+            'parent',
+            'children',
+        ];
+
+    protected $appends
+        = [
+            'fullPath',
+            'size',
+            'mime',
         ];
 
     /**
@@ -65,17 +83,82 @@ class Media extends Model
      */
     public function getPathAttribute()
     {
-        return "{$this->hash[0]}{$this->hash[1]}/{$this->hash[2]}{$this->hash[3]}/{$this->id}-{$this->hash}.{$this->ext}";
+        $pathInfo = pathinfo($this->caption);
+
+        return "{$this->hash[0]}{$this->hash[1]}/{$this->hash[2]}{$this->hash[3]}/{$this->id}-{$this->hash}.{$pathInfo['extension']}";
+    }
+
+    /**
+     * Get real file path
+     *
+     * @return mixed
+     */
+    public function getRealPathAttribute()
+    {
+        return storage_path('media/'.$this->getPathAttribute());
     }
 
     /**
      * Get full file path
      *
-     * @return mixed
+     * @return string
      */
     public function getFullPathAttribute()
     {
-        return storage_path('media/'.$this->getPathAttribute());
+        return $this->getAncestorsAndSelf()->implode('caption', '/');
+    }
+
+    /**
+     * @return string
+     */
+    public function getMimeAttribute()
+    {
+        if ($this->type === self::TYPE_DIR) {
+            return 'directory';
+        }
+
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+
+        return $finfo->file($this->realPath);
+    }
+
+    /**
+     * @return bool|int
+     */
+    public function getSizeAttribute()
+    {
+        return $this->type === self::TYPE_DIR ? false : filesize($this->realPath);
+    }
+
+    /**
+     * Create media record
+     *
+     * @param string $filename
+     * @param array  $attributes
+     *
+     * @return static
+     */
+    public static function createFile($filename, array $attributes = [])
+    {
+        $pathInfo = pathinfo($filename);
+
+        $media = static::create(
+            [
+                'hash'      => array_key_exists('hash', $attributes) ? $attributes['hash'] : md5(uniqid('media', true)),
+                'ext'       => array_key_exists('extension', $pathInfo) ? $pathInfo['extension'] : null,
+                'type'      => Media::TYPE_FILE,
+                'caption'   => array_key_exists('caption ', $attributes) ? $attributes['caption'] : $pathInfo['filename'],
+                'parent_id' => array_key_exists('parent_id', $attributes) ? $attributes['parent_id'] : null,
+            ]
+        );
+
+        $dir = dirname($media->realPath);
+        if (@mkdir($dir, 0755, true) && !is_dir($dir)) {
+            $media->forceDelete();
+            throw new \InvalidArgumentException('Dont create directory.'); //todo
+        }
+
+        return $media;
     }
 
     /**
@@ -90,39 +173,21 @@ class Media extends Model
      */
     public static function createFromStream($source, $filename, array $attributes = [])
     {
-        $pathInfo = pathinfo($filename);
+        $media = static::createFile($filename, $attributes);
 
-        $media = static::create(
-            [
-                'hash'      => array_key_exists('hash', $attributes) ? $attributes['hash'] : md5(uniqid('media', true)),
-                'ext'       => array_key_exists('extension', $pathInfo) ? $pathInfo['extension'] : null,
-                'type'      => Media::TYPE_FILE,
-                'caption'   => array_key_exists('caption ', $attributes) ? $attributes['caption'] : $pathInfo['filename'],
-                'parent_id' => array_key_exists('parent_id', $attributes) ? $attributes['parent_id'] : null,
-            ]
-        );
-
-        $dir = dirname($media->fullPath);
-        if (@mkdir($dir, 0755, true) && !is_dir($dir)) {
-            $media->forceDelete();
-            throw new \InvalidArgumentException('Dont create directory.'); //todo
-        }
-
-        if (!$destination = fopen($media->fullPath, 'w+')) {
+        if (!$destination = fopen($media->realPath, 'w+')) {
             $media->forceDelete();
 
             throw new \InvalidArgumentException('Dont create destination file.'); //todo
         }
 
-        $size = stream_copy_to_stream($source, $destination);
+        stream_copy_to_stream($source, $destination);
 
         if (!fclose($destination)) {
             $media->forceDelete();
 
             throw new \InvalidArgumentException('Dont close destination file.'); //todo
         }
-
-        $media->update(['size' => $size]);
 
         return $media;
     }
