@@ -5,37 +5,37 @@
     <title>elFinder 2.0</title>
 
     <!-- jQuery and jQuery UI (REQUIRED) -->
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css"/>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 
     <!-- elFinder CSS (REQUIRED) -->
-    <link rel="stylesheet" type="text/css" href="<?= asset($dir.'/css/elfinder.min.css') ?>">
-    <link rel="stylesheet" type="text/css" href="<?= asset($dir.'/css/theme.css') ?>">
+    <link rel="stylesheet" type="text/css" href="<?= URL::assetFrom($dir, '/css/elfinder.min.css') ?>">
+    <link rel="stylesheet" type="text/css" href="<?= URL::assetFrom($dir, '/css/theme.css') ?>">
 
     <!-- elFinder JS (REQUIRED) -->
-    <script src="<?= asset($dir.'/js/elfinder.min.js') ?>"></script>
+    <script src="<?= URL::assetFrom($dir, '/js/elfinder.min.js') ?>"></script>
 
-    <?php if($locale){ ?>
-    <!-- elFinder translation (OPTIONAL) -->
-    <script src="<?= asset($dir."/js/i18n/elfinder.$locale.js") ?>"></script>
+    <?php if ($locale) { ?>
+        <!-- elFinder translation (OPTIONAL) -->
+        <script src="<?= URL::assetFrom($dir, "/js/i18n/elfinder.$locale.js") ?>"></script>
     <?php } ?>
 
     <!-- elFinder initialization (REQUIRED) -->
     <script type="text/javascript" charset="utf-8">
         // Documentation for client options:
         // https://github.com/Studio-42/elFinder/wiki/Client-configuration-options
-        $().ready(function() {
+        $().ready(function () {
             $('#elfinder').elfinder({
                 // set your elFinder options here
                 <?php if($locale){ ?>
-                    lang: '<?= $locale ?>', // locale
+                lang: '<?= $locale ?>', // locale
                 <?php } ?>
                 customData: {
                     _token: '<?= csrf_token() ?>'
                 },
-                soundPath: <?= json_encode(asset("$dir/sounds")) ?>,
-                url: '<?= route('backend.filemanager.elfinder.connector'); ?>'  // connector URL
+                soundPath: <?= json_encode(URL::assetFrom($dir, 'sounds')) ?>,
+                url: '<?= route('backend.filemanager.elfinder.connector', [], false); ?>'  // connector URL
             });
         });
     </script>

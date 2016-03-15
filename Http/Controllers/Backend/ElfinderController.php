@@ -88,9 +88,9 @@ class ElfinderController extends Controller
 
     protected function getViewVars()
     {
-        $dir = 'bower/elfinder';
+        $dir = '/bower/elfinder';
         $locale = str_replace('-','_',$this->app->getLocale());
-        if (!file_exists(public_path("/$dir/js/i18n/elfinder.$locale.js"))) {
+        if (!file_exists(public_path("{$dir}/js/i18n/elfinder.{$locale}.js"))) {
             $locale = false;
         }
         $csrf = true;
