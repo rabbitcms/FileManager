@@ -20,7 +20,12 @@ class FileManagerServiceProvider extends ModuleProvider
      */
     public function boot()
     {
+       //    \BackendMenu::addMenu('system', trans('System'), ['system.* ']);
+        \BackendMenu::addItem('system', 'filemanager', trans('File manager'), route('backend.filemanager.index', [], false), 'fa-bars', ['system.filemanager']);
 
+        \BackendAcl::add([
+            'system.filemanager' => trans('File manager'),
+        ]);
     }
 
     /**
@@ -40,11 +45,7 @@ class FileManagerServiceProvider extends ModuleProvider
             return new Media();
         });
 
-        \BackendMenu::addItem('system', 'filemanager', trans('File manager'), '/blanks/blanks', 'fa-bars', ['system.filemanager']);
 
-        \BackendAcl::add([
-            'system.filemanager' => trans('File manager'),
-        ]);
     }
 
     /**

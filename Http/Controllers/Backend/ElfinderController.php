@@ -1,4 +1,6 @@
-<?php namespace RabbitCMS\FileManager\Http\Controllers\Backend;
+<?php 
+
+namespace RabbitCMS\FileManager\Http\Controllers\Backend;
 
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Request;

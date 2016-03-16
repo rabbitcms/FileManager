@@ -1,8 +1,8 @@
 <?php
+\Route::get('/', ['as' => 'index', 'uses' => '\RabbitCMS\FileManager\Http\Controllers\Backend\MainController@index']);
 
-\Route::group(['prefix'=>'elfinder','namespace'=>'\RabbitCMS\FileManager\Http\Controllers\Backend'], function(\Illuminate\Routing\Router $router)
-{
-    $router->get('/', 'ElfinderController@showIndex');
+\Route::group(['prefix' => 'elfinder', 'namespace' => '\RabbitCMS\FileManager\Http\Controllers\Backend'], function (\Illuminate\Routing\Router $router) {
+    $router->get('/', ['as' => 'elfinder.standalone', 'uses' => 'ElfinderController@showIndex']);
     $router->any('connector', ['as' => 'elfinder.connector', 'uses' => 'ElfinderController@showConnector']);
     $router->get('popup/{input_id}', ['as' => 'elfinder.popup', 'uses' => 'ElfinderController@showPopup']);
     $router->get('filepicker/{input_id}', ['as' => 'elfinder.filepicker', 'uses' => 'ElfinderController@showFilePicker']);
