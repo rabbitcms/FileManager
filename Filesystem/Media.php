@@ -551,7 +551,7 @@ class Media implements FilesystemInterface
         $normalized = [
             'type'     => $file->type,
             'path'     => $file->fullPath,
-            'basename' => $file->fullPath,
+            'basename' => $file->caption,
         ];
 
         $normalized['timestamp'] = $file->updated_at->timestamp;
