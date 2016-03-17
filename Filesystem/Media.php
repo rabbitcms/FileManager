@@ -102,8 +102,8 @@ class Media implements FilesystemInterface
      */
     public function listContents($directory = '', $recursive = false)
     {
-        if ($directory === '/') {
-            $list = $recursive ? MediaEntity::roots() : MediaEntity::all();
+        if (in_array($directory, ['/', '.', ''], true)) {
+            $list = $recursive ? MediaEntity::all() : MediaEntity::roots()->get();
         } else {
             $media = $this->find($directory);
             if ($media === null || $media->type === MediaEntity::TYPE_FILE) {
