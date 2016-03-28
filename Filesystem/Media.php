@@ -212,7 +212,6 @@ class Media implements FilesystemInterface
 
     public function write($path, $contents, array $config = [])
     {
-        \Log::debug(__METHOD__,[$path,$config]);
         $this->find($path, false);
         $media = $this->createFile($path, $config);
 
@@ -240,7 +239,6 @@ class Media implements FilesystemInterface
      */
     public function writeStream($path, $resource, array $config = [])
     {
-        \Log::debug(__METHOD__,func_get_args());
         $this->find($path, false);
 
         $media = $this->createFile($path, $config);
@@ -536,7 +534,6 @@ class Media implements FilesystemInterface
      */
     protected function moveTo(MediaEntity $node, $destination)
     {
-        \Log::debug(__METHOD__,func_get_args());
         if ($parent = $this->ensureDirectory($destination)) {
             $node->makeChildOf($parent);
         } else {
@@ -576,11 +573,15 @@ class Media implements FilesystemInterface
      */
     protected function ensureDirectory($root, array $config = [])
     {
-        \Log::debug(__METHOD__,func_get_args());
         $media = $this->find($root);
         if ($media === null && !in_array($root, ['/', '.', ''], true)) {
+            $parent = $this->ensureDirectory(dirname($root));
             $media = MediaEntity::createDirectory(basename($root));
-            $this->moveTo($media, dirname($root));
+            if ($parent){
+                $media->makeChildOf($parent);
+            } else {
+                $media->makeRoot();
+            }
         }
 
         return $media;
@@ -598,7 +599,6 @@ class Media implements FilesystemInterface
      */
     protected function createFile($path, array $config)
     {
-        \Log::debug(__METHOD__,func_get_args());
         $path = Util::normalizePath($path);
         $pathInfo = pathinfo($path);
         return (new MediaEntity)->getConnection()->transaction(function () use ($path, $pathInfo,$config) {
@@ -624,7 +624,7 @@ class Media implements FilesystemInterface
             } else {
                 $media->makeRoot();
             }
-            
+
             return $media;
         });
     }
