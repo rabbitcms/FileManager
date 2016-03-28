@@ -212,6 +212,7 @@ class Media implements FilesystemInterface
 
     public function write($path, $contents, array $config = [])
     {
+        \Log::debug(__METHOD__,[$path,$config]);
         $this->find($path, false);
         $media = $this->createFile($path, $config);
 
@@ -239,6 +240,7 @@ class Media implements FilesystemInterface
      */
     public function writeStream($path, $resource, array $config = [])
     {
+        \Log::debug(__METHOD__,func_get_args());
         $this->find($path, false);
 
         $media = $this->createFile($path, $config);
@@ -534,6 +536,7 @@ class Media implements FilesystemInterface
      */
     protected function moveTo(MediaEntity $node, $destination)
     {
+        \Log::debug(__METHOD__,func_get_args());
         if ($parent = $this->ensureDirectory($destination)) {
             $node->makeChildOf($parent);
         } else {
@@ -573,6 +576,7 @@ class Media implements FilesystemInterface
      */
     protected function ensureDirectory($root, array $config = [])
     {
+        \Log::debug(__METHOD__,func_get_args());
         $media = $this->find($root);
         if ($media === null && !in_array($root, ['/', '.', ''], true)) {
             $media = MediaEntity::createDirectory(basename($root));
@@ -588,33 +592,34 @@ class Media implements FilesystemInterface
      *
      * @throws \LogicException
      * @throws \InvalidArgumentException
+     * @throws \Exception|\Throwable
      *
      * @return MediaEntity
      */
     protected function createFile($path, array $config)
     {
+        \Log::debug(__METHOD__,func_get_args());
         $path = Util::normalizePath($path);
         $pathInfo = pathinfo($path);
+        return (new MediaEntity)->getConnection()->transaction(function () use ($path, $pathInfo,$config) {
+            $media = MediaEntity::create(
+                [
+                    'hash'      => array_key_exists('hash', $config) ? $config['hash'] : md5(uniqid('media', true)),
+                    'ext'       => null,
+                    'type'      => MediaEntity::TYPE_FILE,
+                    'caption'   => array_key_exists('caption ', $config) ? $config['caption'] : $pathInfo['basename'],
+                    'parent_id' => array_key_exists('parent_id', $config) ? $config['parent_id'] : null,
+                ]
+            );
 
-        $media = MediaEntity::create(
-            [
-                'hash'      => array_key_exists('hash', $config) ? $config['hash'] : md5(uniqid('media', true)),
-                'ext'       => null,
-                'type'      => MediaEntity::TYPE_FILE,
-                'caption'   => array_key_exists('caption ', $config) ? $config['caption'] : $pathInfo['basename'],
-                'parent_id' => array_key_exists('parent_id', $config) ? $config['parent_id'] : null,
-            ]
-        );
+            $dir = dirname($media->realPath);
+            if (@mkdir($dir, 0755, true) && !is_dir($dir)) {
 
-        $dir = dirname($media->realPath);
-        if (@mkdir($dir, 0755, true) && !is_dir($dir)) {
-            $media->forceDelete();
+                throw new \InvalidArgumentException();
+            }
 
-            throw new \InvalidArgumentException();
-        }
-
-        $this->moveTo($media, dirname($path));
-
-        return $media;
+            $this->moveTo($media, dirname($path));
+            return $media;
+        });
     }
 }
