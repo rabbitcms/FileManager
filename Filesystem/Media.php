@@ -602,6 +602,7 @@ class Media implements FilesystemInterface
         $path = Util::normalizePath($path);
         $pathInfo = pathinfo($path);
         return (new MediaEntity)->getConnection()->transaction(function () use ($path, $pathInfo,$config) {
+            $parent = $this->ensureDirectory(dirname($path));
             $media = MediaEntity::create(
                 [
                     'hash'      => array_key_exists('hash', $config) ? $config['hash'] : md5(uniqid('media', true)),
@@ -618,7 +619,12 @@ class Media implements FilesystemInterface
                 throw new \InvalidArgumentException();
             }
 
-            $this->moveTo($media, dirname($path));
+            if ($parent){
+                $media->makeChildOf($parent);
+            } else {
+                $media->makeRoot();
+            }
+            
             return $media;
         });
     }
