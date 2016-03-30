@@ -4,6 +4,7 @@ use Baum\Node;
 use Carbon\Carbon;
 use DKulyk\Eloquent\Logging;
 use DKulyk\Eloquent\PrintableJson;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Media
@@ -26,7 +27,7 @@ use DKulyk\Eloquent\PrintableJson;
  */
 class Media extends Node
 {
-    use Logging, PrintableJson;
+    use Logging, PrintableJson, SoftDeletes;
 
     const TYPE_FILE = 'file';
     const TYPE_DIR = 'dir';
