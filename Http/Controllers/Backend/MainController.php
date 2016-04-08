@@ -12,6 +12,7 @@ class MainController extends Controller
     {
         Metronic::addPath(trans('Home'), '/');
         Metronic::addPath(trans('FileManager'), null);
+        Metronic::menu('system','filemanager');
         return $this->view('backend.main')
             ->with($this->getViewVars());
     }
