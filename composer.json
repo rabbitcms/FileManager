@@ -1,7 +1,6 @@
 {
 	"name": "rabbitcms/filemanager",
 	"description": "",
-	"type": "october-module",
 	"authors": [
 		{
 			"name": "Kulyk Dmytro",
