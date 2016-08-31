@@ -12,16 +12,5 @@
 		"psr-4": {
 			"RabbitCMS\\FileManager\\": ""
 		}
-	},
-	"require": {
-		"illuminate/support":"^5.2",
-		"illuminate/database":"^5.2",
-		"rabbitcms/carrot": "^0.1",
-		"dkulyk/eloquent-extra": "^0.1",
-		"studio-42/elfinder": "2.1.6",
-		"baum/baum": "~1.1",
-		"barryvdh/elfinder-flysystem-driver": "^0.1",
-		"bower-asset/elfinder":"2.1.6",
-		"bower-asset/jquery-ui": "~1.11"
 	}
 }
