@@ -1,15 +1,33 @@
 {
 	"name": "rabbitcms/filemanager",
-	"description": "",
+	"description": "File manager for RabbitCMS based on elFinder",
 	"authors": [
 		{
 			"name": "Kulyk Dmytro",
 			"email": "lnkvisitor.ts@gmail.com"
+		},
+		{
+			"name": "Dmytro Zhurakovskyi",
+			"email": "dmytro.zhurakovsky@gmail.com"
 		}
 	],
 	"autoload": {
 		"psr-4": {
-			"RabbitCMS\\FileManager\\": ""
+			"RabbitCMS\\FileManager\\": "./"
+		}
+	},
+	"require": {
+		"rabbitcms/backend": "^0.6.0",
+		"studio-42/elfinder": "^2.1.14"
+	},
+	"suggest": {
+		"barryvdh/elfinder-flysystem-driver": "^0.2.0 To use Flysystem driver"
+	},
+	"extra": {
+		"module": {
+			"enabled": true,
+			"providers": "RabbitCMS\\FileManager\\Providers\\FileManagerModuleProvider",
+			"system": true
 		}
 	}
 }

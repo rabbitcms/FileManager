@@ -26,9 +26,9 @@ return [
     |    ]
     */
 	'disks' => [
-		'media' => [
+		/*'media' => [
 			'alias' => trans('MediaFiles'),
-		],
+		],*/
 	],
 
 	/*
